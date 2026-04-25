@@ -1,0 +1,31 @@
+name: Build APK from Compressed File
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install p7zip
+        run: sudo apt-get install p7zip-full -y
+        
+      - name: Extract Project
+        run: 7z x aura-vpn.7z
+        
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          
+      - run: npm install
+      
+      - name: Build with Gradle
+        run: |
+          chmod +x android/gradlew
+          cd android && ./gradlew assembleDebug
+      
+      - uses: actions/upload-artifact@v3
+        with:
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
