@@ -1,9 +1,0 @@
-{
-  "appId": "com.auravpn.app",
-  "appName": "Aura VPN",
-  "webDir": "www",
-  "server": {
-    "url": "https://unrivaled-unicorn-c24f4b.netlify.app",
-    "cleartext": true
-  }
-}
