@@ -1,4 +1,4 @@
-name: Build APK from Compressed File
+name: Build APK from Zip File
 on: [push]
 jobs:
   build:
@@ -6,17 +6,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install p7zip
-        run: sudo apt-get install p7zip-full -y
-
-      - name: Extract Project
+      - name: Extract Zip Project
         run: |
-          ZIP_FILE=$(find . -name "*.7z" | head -n 1)
+          ZIP_FILE=$(find . -name "*.zip" | head -n 1)
           if [ -z "$ZIP_FILE" ]; then
-            echo "Error: No .7z file found!"
+            echo "Error: No .zip file found!"
             exit 1
           fi
-          7z x "$ZIP_FILE"
+          unzip "$ZIP_FILE"
 
       - uses: actions/setup-java@v4
         with:
@@ -31,7 +28,7 @@ jobs:
           find . -name "gradlew" -exec chmod +x {} \;
           GRADLE_PATH=$(find . -name "gradlew" | head -n 1)
           if [ -z "$GRADLE_PATH" ]; then
-            echo "Error: gradlew not found!"
+            echo "Error: gradlew not found! Make sure your zip contains the android folder."
             exit 1
           fi
           cd $(dirname $GRADLE_PATH) && ./gradlew assembleDebug
